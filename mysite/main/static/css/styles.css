@@ -1,0 +1,43 @@
+body {
+
+}
+
+p {
+    color: #4A586A;
+    font-size: 18px;
+}
+
+a {
+    text-decoration: none;
+    /*color: #728495;*/
+    font-weight: 400;
+}
+
+a:hover {
+    color: #728495;
+    text-decoration: underline;
+}
+
+h5 {
+    font-size: 18px;
+}
+
+.bg-nav {
+    background-color: #6E6C78;
+    border-radius: 15px;
+    margin: 0 10%;
+}
+
+
+.a_title {
+    color: #B4C5DB;
+    font-size: 24px;
+    font-weight: 700;
+}
+
+
+.logout {
+    background-color: transparent;
+    outline: none;
+    border: none;
+}
