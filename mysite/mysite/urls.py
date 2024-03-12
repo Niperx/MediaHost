@@ -21,14 +21,15 @@ from django.conf import settings
 
 from django.contrib.auth.views import LoginView, LogoutView
 
-from main.views import HomeView, RegisterView, ProfileView, ShowProfilePageView
+from main.views import HomeView, RegisterView, ProfileView, ShowProfilePageView, EditProfilePageView
 
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('', HomeView.as_view(), name='homepage'),
-    path('user_profile/<int:pk>/', ShowProfilePageView.as_view(), name='user_profile'),
 
-    path('profile/<str:username>', ProfileView.as_view(), name='profile'),
+    path('profile/<username>', ProfileView.as_view(), name='profile'),
+    path('profile/edit_profile_page/', EditProfilePageView.as_view(), name='edit_profile_page'),
+
     path('register', RegisterView.as_view(success_url='/'), name='register'),
     path('login/', LoginView.as_view(template_name='login.html'), name='login'),
     path('logout/', LogoutView.as_view(), name='logout'),
