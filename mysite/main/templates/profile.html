@@ -1,6 +1,7 @@
 {% extends 'layout.html' %}
 {% load static %}
 {% block content %}
+<br>
 <div class="row mt-5 mb-5">
     <div class="col-3 mt-2">
         <h1>Profile</h1>
@@ -19,13 +20,14 @@
     </div>
 
 </div>
-
+<div class="container my-10">
+    <h1>Photos:</h1>
     <div class="row my-2">
         {% if request.user.id == page_user.id %}
         <div class="col-md-4 my-3 mt-5 text-center">
-            <h4>Add media   </h4>
+            <h4>Add photo</h4>
             <a href="{% url 'upload_photo' %}">
-                <img style="width: 70%; height: 70%;"  src="{% static 'images\add_photo.png' %}">
+                <img style="width: 70%;"  src="{% static 'images\add_photo.png' %}">
             </a>
         </div>
         {% endif %}
@@ -42,4 +44,38 @@
         </div>
     {% endfor %}
     </div>
+</div>
+<br>
+<br>
+<div class="container my-10">
+    <h1>Videos:</h1>
+    {% if videos %}
+    <div class="row my-2">
+        {% if request.user.id == page_user.id %}
+        <div class="col-md-4 my-3 mt-5 text-center">
+            <h4>Add video</h4>
+            <a href="{% url 'upload_video' %}">
+                <img style="width: 70%;"  src="{% static 'images\add_photo.png' %}">
+            </a>
+        </div>
+        {% endif %}
+    {% for x in videos %}
+        <div class="col-md-4 my-3">
+
+            <div class="navbar">
+                <h3>{{ x.caption }}</h3>
+                <h5 class="text-secondary">{{ x.created_at }}</h5>
+            </div>
+
+            <video class="embed-responsive embed-responsive-4by3" style="width: 100%; height: 70%; object-fit: cover;" controls="controls">
+                <source src="{{ x.video.url }}" type="video/mp4" />
+            </video>
+
+        </div>
+    {% endfor %}
+    </div>
+    {% else %}
+        <h1 class="text-center my-5">No videos</h1>
+    {% endif %}
+</div>
 {% endblock %}

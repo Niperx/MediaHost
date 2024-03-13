@@ -4,10 +4,10 @@
     <div class='container py-5 my-3 px-3 bg-light d-block'>
     {% if request.user.is_authenticated %}
         <div class="card-body">
-            <form method="POST" action="" enctype="multipart/form-data"></form>
+            <form method="POST" action="" enctype="multipart/form-data">
                 {% csrf_token %}
                 {{form.as_p}}
-                <input class="button" type="submit" value="Submit">
+                <button type="submit" class="btn btn-primary">Upload</button>
             </form>
         </div>
     {% else %}

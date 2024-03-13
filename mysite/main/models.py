@@ -17,6 +17,20 @@ class Photo(models.Model):
         return f'ID: {self.pk}:  {self.title}  --  {self.created_by.username}'
 
 
+class Video(models.Model):
+    caption = models.CharField(max_length=30)
+    created_by = models.ForeignKey(get_user_model(), on_delete=models.PROTECT)
+    created_at = models.DateTimeField(auto_now_add=True)
+    video = models.FileField()
+
+    class Meta:
+        verbose_name = 'Video'
+        verbose_name_plural = 'Videos'
+
+    def __str__(self):
+        return f'ID: {self.pk}:  {self.caption}  --  {self.created_by.username}'
+
+
 class Profile(models.Model):
     user = models.OneToOneField(User, null=True, on_delete=models.CASCADE)
     bio = models.TextField(null=True, blank=True)

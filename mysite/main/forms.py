@@ -4,7 +4,7 @@ from django.contrib.auth.models import User
 
 from django.forms import ModelForm
 
-from .models import Profile, Photo
+from .models import Profile, Photo, Video
 
 
 class NewUserForm(UserCreationForm):
@@ -32,15 +32,12 @@ class ProfileForm(ModelForm):
 class ImageForm(ModelForm):
     class Meta:
         model = Photo
-        fields = ('title', 'created_by', 'image')
+        fields = ('title', 'image')
         # fields = '__all__'
 
-    # def save(self, commit=True):
-    #     photo = super().save(commit=False)
-    #     photo.title = self.cleaned_data['title']
-    #     photo.created_by = self.cleaned_data['created_by']
-    #     photo.image = self.cleaned_data['image']
-    #     if commit:
-    #         photo.save()
-    #     return photo
 
+class VideoForm(ModelForm):
+    class Meta:
+        model = Video
+        fields = ('caption', 'video')
+        # fields = '__all__'
