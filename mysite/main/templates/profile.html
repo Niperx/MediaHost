@@ -1,43 +1,43 @@
 {% extends 'layout.html' %}
 {% load static %}
 {% block content %}
-    <div class="header-bar mt-5">
+<div class="row mt-5 mb-5">
+    <div class="col-3 mt-2">
         <h1>Profile</h1>
 
-    <div class="card-body">
-    {% if user.profile.profile_pic %}
-      <img src="{{ profile.profile_pic.url }}" height=100 width=100><br><br>
-    {% else %}
-      <img src="{% static 'images\user.png' %}" height=100 width=100><br><br>
-    {% endif %}
-      <p><strong>Username:</strong> {{ page_user }}</p><br><br>
-      <p><strong>Bio:</strong> {{ profile.bio }}</p><br><br>
-    {% if profile.twitter %}
-      <p><strong>Twitter:</strong> {{ profile.twitter }}</p><br><br>
-    {% endif %}
-    {% if profile.instagram %}
-      <p><strong>Instagram:</strong> {{ profile.instagram }}</p><br><br>
-    {% endif %}
-    {% if profile.facebook %}
-      <p><strong>Facebook:</strong> {{ profile.facebook }}</p><br><br>
-    {% endif %}
-
-    {% if user.id == profile.user.id %}
-        <a href="{% url 'edit_profile_page' %}"><button class="button">Edit</button></a>
-    {% endif %}
+        <div class="card-body">
+        {% if user.profile.profile_pic %}
+          <img src="{{ profile.profile_pic.url }}" height=100 width=100><br><br>
+        {% else %}
+          <img src="{% static 'images\user.png' %}" height=100 width=100><br><br>
+        {% endif %}
+        </div>
+    </div>
+    <div class="col-6 mt-5">
+        <p><strong>Username:</strong> {{ page_user }}</p>
+        <p><strong>Bio:</strong> {{ page_user.bio }}</p><br><br>
     </div>
 
-    <div class="row my-5">
+</div>
+
+    <div class="row my-2">
+        {% if request.user.id == page_user.id %}
+        <div class="col-md-4 my-3 mt-5 text-center">
+            <h4>Add media   </h4>
+            <a href="{% url 'upload_photo' %}">
+                <img style="width: 70%; height: 70%;"  src="{% static 'images\add_photo.png' %}">
+            </a>
+        </div>
+        {% endif %}
     {% for n in photos %}
-        <div class="col-md-4 bg-light">
+        <div class="col-md-4 my-3">
 
             <div class="navbar">
                 <h3>{{ n.title }}</h3>
-                <h5>{{ n.created_by.username }}</h5>
+                <h5 class="text-secondary">{{ n.created_at }}</h5>
             </div>
 
-            <img width="100%" src="{{ n.image.url }}">
-            <p class="text-secondary">{{ n.created_at }}</p>
+            <img style="width: 100%; height: 70%; object-fit: cover;"  src="{{ n.image.url }}">
 
         </div>
     {% endfor %}

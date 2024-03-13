@@ -15,7 +15,7 @@
     <a class='a_title p-1' href="{% url 'homepage' %}">Media Host 2024</a>
     {% if request.user.is_authenticated %}
         <span>
-            <a class='a_title p-1' href="/">
+            <a class='a_title p-1' href="../profile/{{ request.user.username }}">
                 {{ request.user.username }}
             </a>
 
@@ -25,11 +25,11 @@
             </form>
         </span>
     {% else %}
-        <span>
-        <a class='a_title p-1' href="{% url 'login' %}">Log In</a>
-        <span class='a_title px-1'> | </span>
-        <a class='a_title p-1' href="{% url 'register' %}">Register</a>
-        </span>
+<!--        <span>-->
+<!--        <a class='a_title p-1' href="{% url 'login' %}">Log In</a>-->
+<!--        <span class='a_title px-1'> | </span>-->
+<!--        <a class='a_title p-1' href="{% url 'register' %}">Register</a>-->
+<!--        </span>-->
     {% endif %}
 </div>
 <div class="container">

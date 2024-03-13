@@ -1,11 +1,12 @@
-from django.shortcuts import get_object_or_404
+from django.shortcuts import get_object_or_404, render, redirect
 from django.urls import reverse_lazy
 
 from django.views.generic import TemplateView, FormView, UpdateView
 from django.views.generic.detail import DetailView
+from django.views.generic.edit import CreateView
 from django.contrib.auth.models import User
 
-from main.forms import NewUserForm, ProfileForm
+from main.forms import NewUserForm, ProfileForm, ImageForm
 from main.models import Photo, Profile
 
 
@@ -42,11 +43,7 @@ class ProfileView(TemplateView):
         #     username = self.request.user
         context = super().get_context_data(*args, **kwargs)
         username = self.kwargs.get("username")
-        uid = None
-        try:
-            uid = User.objects.get(username=username)
-        except:
-            pass
+        uid = get_object_or_404(User, username=username)
         page_user = get_object_or_404(Profile, id=uid.id)
         context['page_user'] = page_user
         context['photos'] = Photo.objects.all().filter(created_by=uid).order_by("-created_at")
@@ -65,7 +62,41 @@ class ShowProfilePageView(DetailView):
         return context
 
 
-class EditProfilePageView(UpdateView):
+class CreateProfilePageView(CreateView):
     model = Profile
-    template_name = 'edit_profile_page.html'
-    form_class = ProfileForm
+
+    template_name = 'create_profile.html'
+    fields = ['profile_pic', 'bio', 'facebook', 'twitter', 'instagram']
+
+    def form_valid(self, form):
+        form.instance.user = self.request.user
+        return super().form_valid(form)
+
+    success_url = reverse_lazy('profile')
+
+
+def upload_photo(request):
+    submitted = False
+    if request.method == 'POST':
+        form = ImageForm(request.POST, request.FILES)
+        if form.is_valid():
+            img = form.save(commit=False)
+            img.created_by = request.user.id
+            img.save()
+            return redirect('homepage')
+
+    form = ImageForm()
+    return render(request, 'upload_photo.html', {'form' : form})
+
+class UploadPhoto(CreateView):
+    model = Photo
+    template_name = 'upload_photo.html'
+    form_class = ImageForm
+
+    def form_valid(self, form):
+        photo = form.save(commit=False)
+        photo.created_by = self.request.user.id
+        photo.save()
+        return super().form_valid(form)
+
+    success_url = '/'
