@@ -1,7 +1,7 @@
 from django.shortcuts import get_object_or_404, render, redirect
 from django.urls import reverse_lazy
 
-from django.views.generic import TemplateView, FormView, UpdateView
+from django.views.generic import TemplateView, FormView, UpdateView, View
 from django.views.generic.detail import DetailView
 from django.views.generic.edit import CreateView
 from django.contrib.auth.models import User
@@ -29,8 +29,8 @@ class ProfileView(TemplateView):
     model = Profile
     template_name = 'profile.html'
 
-    def get_context_data(self, *args, **kwargs):
-        context = super().get_context_data(*args, **kwargs)
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
         username = self.kwargs.get("username")
         uid = get_object_or_404(User, username=username)
         page_user = get_object_or_404(Profile, id=uid.id)

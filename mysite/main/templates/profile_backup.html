@@ -34,7 +34,7 @@
     {% for n in photos %}
         <div class="col-md-4 my-3">
 
-            <div class="container">
+            <div class="navbar">
                 <h3>{{ n.title }}</h3>
                 <h5 class="text-secondary">{{ n.created_at }}</h5>
             </div>
@@ -62,7 +62,7 @@
     {% for x in videos %}
         <div class="col-md-4 my-3">
 
-            <div class="container">
+            <div class="navbar">
                 <h3>{{ x.caption }}</h3>
                 <h5 class="text-secondary">{{ x.created_at }}</h5>
             </div>
@@ -79,3 +79,7 @@
     {% endif %}
 </div>
 {% endblock %}
+
+
+<div>
+
