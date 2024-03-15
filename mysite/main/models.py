@@ -17,10 +17,24 @@ class Photo(models.Model):
         return f'ID: {self.pk}:  {self.title}  --  {self.created_by.username}'
 
 
+class MediaAlbum(models.Model):
+    title = models.CharField(max_length=30)
+    created_by = models.ForeignKey(get_user_model(), on_delete=models.PROTECT)
+
+    class Meta:
+        verbose_name = 'MediaAlbum'
+        verbose_name_plural = 'MediaAlbums'
+
+    def __str__(self):
+        return str(self.title)
+
+
 class Video(models.Model):
     caption = models.CharField(max_length=30)
     created_by = models.ForeignKey(get_user_model(), on_delete=models.PROTECT)
+    album = models.ForeignKey(MediaAlbum, null=True, on_delete=models.CASCADE)
     created_at = models.DateTimeField(auto_now_add=True)
+
     video = models.FileField()
 
     class Meta:
@@ -29,6 +43,14 @@ class Video(models.Model):
 
     def __str__(self):
         return f'ID: {self.pk}:  {self.caption}  --  {self.created_by.username}'
+
+
+class Album(models.Model):
+    title = models.CharField(max_length=30)
+    created_by = models.ForeignKey(get_user_model(), on_delete=models.PROTECT)
+
+    def __str__(self):
+        return self.title
 
 
 class Profile(models.Model):
