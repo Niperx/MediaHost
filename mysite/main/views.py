@@ -9,6 +9,7 @@ from django.contrib.auth.models import User
 from main.forms import NewUserForm, ProfileForm, ImageForm, VideoForm
 from main.models import Photo, Profile, Video
 
+# hello
 
 class HomeView(TemplateView):
 
