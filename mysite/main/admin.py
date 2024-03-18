@@ -1,9 +1,9 @@
 from django.contrib import admin
 
-from main.models import Photo, Profile, Video, MediaAlbum
+from main.models import Photo, Profile, Video, Album
 
 
 admin.site.register(Photo)
 admin.site.register(Profile)
 admin.site.register(Video)
-admin.site.register(MediaAlbum)
+admin.site.register(Album)

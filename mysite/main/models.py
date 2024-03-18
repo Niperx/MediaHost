@@ -3,21 +3,7 @@ from django.contrib.auth import get_user_model
 from django.contrib.auth.models import User
 
 
-class Photo(models.Model):
-    title = models.CharField(max_length=30)
-    created_by = models.ForeignKey(get_user_model(), on_delete=models.PROTECT)
-    created_at = models.DateTimeField(auto_now_add=True)
-    image = models.ImageField()
-
-    class Meta:
-        verbose_name = 'Photo'
-        verbose_name_plural = 'Photos'
-
-    def __str__(self):
-        return f'ID: {self.pk}:  {self.title}  --  {self.created_by.username}'
-
-
-class MediaAlbum(models.Model):
+class Album(models.Model):
     title = models.CharField(max_length=30)
     created_by = models.ForeignKey(get_user_model(), on_delete=models.PROTECT)
 
@@ -29,10 +15,25 @@ class MediaAlbum(models.Model):
         return str(self.title)
 
 
+class Photo(models.Model):
+    title = models.CharField(max_length=30)
+    created_by = models.ForeignKey(get_user_model(), on_delete=models.PROTECT)
+    album = models.ForeignKey(Album, null=True, on_delete=models.CASCADE)
+    created_at = models.DateTimeField(auto_now_add=True)
+    image = models.ImageField()
+
+    class Meta:
+        verbose_name = 'Photo'
+        verbose_name_plural = 'Photos'
+
+    def __str__(self):
+        return f'ID: {self.pk}:  {self.title}  --  {self.created_by.username}'
+
+
 class Video(models.Model):
     caption = models.CharField(max_length=30)
     created_by = models.ForeignKey(get_user_model(), on_delete=models.PROTECT)
-    album = models.ForeignKey(MediaAlbum, null=True, on_delete=models.CASCADE)
+    album = models.ForeignKey(Album, null=True, on_delete=models.CASCADE)
     created_at = models.DateTimeField(auto_now_add=True)
 
     video = models.FileField()
@@ -43,14 +44,6 @@ class Video(models.Model):
 
     def __str__(self):
         return f'ID: {self.pk}:  {self.caption}  --  {self.created_by.username}'
-
-
-class Album(models.Model):
-    title = models.CharField(max_length=30)
-    created_by = models.ForeignKey(get_user_model(), on_delete=models.PROTECT)
-
-    def __str__(self):
-        return self.title
 
 
 class Profile(models.Model):

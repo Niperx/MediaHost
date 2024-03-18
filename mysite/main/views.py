@@ -7,9 +7,8 @@ from django.views.generic.edit import CreateView
 from django.contrib.auth.models import User
 
 from main.forms import NewUserForm, ProfileForm, ImageForm, VideoForm
-from main.models import Photo, Profile, Video
+from main.models import Photo, Profile, Video, Album
 
-# hello
 
 class HomeView(TemplateView):
 
@@ -38,6 +37,24 @@ class ProfileView(TemplateView):
         context['page_user'] = page_user
         context['photos'] = Photo.objects.all().filter(created_by=uid).order_by("-created_at")
         context['videos'] = Video.objects.all().filter(created_by=uid).order_by("-created_at")
+        return context
+
+
+class AlbumView(TemplateView):
+
+    template_name = 'profile_album.html'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        username = self.kwargs.get("username")
+        album_title = self.kwargs.get("album")
+        print(album_title)
+        uid = get_object_or_404(User, username=username)
+        album = get_object_or_404(Album, title=album_title)
+        page_user = get_object_or_404(Profile, id=uid.id)
+        context['page_user'] = page_user
+        context['photos'] = Photo.objects.all().filter(created_by=uid, album=album).order_by("-created_at")
+        context['videos'] = Video.objects.all().filter(created_by=uid, album=album).order_by("-created_at")
         return context
 
 

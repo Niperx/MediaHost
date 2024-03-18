@@ -21,14 +21,17 @@ from django.conf import settings
 
 from django.contrib.auth.views import LoginView, LogoutView
 
-from main.views import HomeView, RegisterView, ProfileView, CreateProfilePageView, UploadPhoto, upload_photo, UploadVideo
+from main.views import HomeView, RegisterView, ProfileView, CreateProfilePageView, UploadPhoto, upload_photo, UploadVideo, AlbumView
 
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('', HomeView.as_view(), name='homepage'),
 
     path('profile/<username>', ProfileView.as_view(), name='profile'),
+    path('profile/<username>/<album>', AlbumView.as_view(), name='profile_album'),
+
     path('create_profile_page/', CreateProfilePageView.as_view(), name='create_profile_page'),
+
     path('upload_photo/', UploadPhoto.as_view(), name='upload_photo'),
     path('upload_video/', UploadVideo.as_view(), name='upload_video'),
     path('register', RegisterView.as_view(success_url='/'), name='register'),
