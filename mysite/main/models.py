@@ -5,11 +5,11 @@ from django.contrib.auth.models import User
 
 class Album(models.Model):
     title = models.CharField(max_length=30)
-    created_by = models.ForeignKey(get_user_model(), on_delete=models.PROTECT)
+    created_by = models.ForeignKey(get_user_model(), on_delete=models.CASCADE)
 
     class Meta:
-        verbose_name = 'MediaAlbum'
-        verbose_name_plural = 'MediaAlbums'
+        verbose_name = 'Album'
+        verbose_name_plural = 'Albums'
 
     def __str__(self):
         return str(self.title)
@@ -17,8 +17,8 @@ class Album(models.Model):
 
 class Photo(models.Model):
     title = models.CharField(max_length=30)
-    created_by = models.ForeignKey(get_user_model(), on_delete=models.PROTECT)
-    album = models.ForeignKey(Album, null=True, on_delete=models.CASCADE)
+    created_by = models.ForeignKey(get_user_model(), on_delete=models.CASCADE)
+    album = models.ForeignKey(Album, null=True, on_delete=models.SET_NULL)
     created_at = models.DateTimeField(auto_now_add=True)
     image = models.ImageField()
 
@@ -32,8 +32,8 @@ class Photo(models.Model):
 
 class Video(models.Model):
     caption = models.CharField(max_length=30)
-    created_by = models.ForeignKey(get_user_model(), on_delete=models.PROTECT)
-    album = models.ForeignKey(Album, null=True, on_delete=models.CASCADE)
+    created_by = models.ForeignKey(get_user_model(), on_delete=models.CASCADE)
+    album = models.ForeignKey(Album, null=True, on_delete=models.SET_NULL)
     created_at = models.DateTimeField(auto_now_add=True)
 
     video = models.FileField()

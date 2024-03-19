@@ -14,6 +14,12 @@
                 <a class='btn btn-outline-secondary btn-lg p-1' href="{% url 'register' %}">Register</a>
             </div>
         </div>
+        {% else %}
+        <div class="row">
+            <div class="col">
+                <a class='btn btn-outline-secondary btn-lg p-1' href="/profile/{{ request.user.username }}">Go to my Profile</a>
+            </div>
+        </div>
         {% endif %}
     </div>
 {% endblock %}
