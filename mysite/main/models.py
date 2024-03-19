@@ -1,3 +1,4 @@
+from django.utils.timezone import now
 from django.db import models
 from django.contrib.auth import get_user_model
 from django.contrib.auth.models import User
@@ -6,6 +7,7 @@ from django.contrib.auth.models import User
 class Album(models.Model):
     title = models.CharField(max_length=30)
     created_by = models.ForeignKey(get_user_model(), on_delete=models.CASCADE)
+    created_at = models.DateTimeField(default=now, blank=True)
 
     class Meta:
         verbose_name = 'Album'
@@ -35,7 +37,6 @@ class Video(models.Model):
     created_by = models.ForeignKey(get_user_model(), on_delete=models.CASCADE)
     album = models.ForeignKey(Album, null=True, on_delete=models.SET_NULL)
     created_at = models.DateTimeField(auto_now_add=True)
-
     video = models.FileField()
 
     class Meta:

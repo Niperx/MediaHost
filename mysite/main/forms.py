@@ -4,7 +4,7 @@ from django.contrib.auth.models import User
 
 from django.forms import ModelForm
 
-from .models import Profile, Photo, Video
+from .models import Profile, Photo, Video, Album
 
 
 class NewUserForm(UserCreationForm):
@@ -33,11 +33,15 @@ class ImageForm(ModelForm):
     class Meta:
         model = Photo
         fields = ('title', 'image')
-        # fields = '__all__'
 
 
 class VideoForm(ModelForm):
     class Meta:
         model = Video
         fields = ('caption', 'video')
-        # fields = '__all__'
+
+
+class AlbumForm(ModelForm):
+    class Meta:
+        model = Album
+        fields = ('title', )

@@ -6,7 +6,7 @@ from django.views.generic.detail import DetailView
 from django.views.generic.edit import CreateView
 from django.contrib.auth.models import User
 
-from main.forms import NewUserForm, ProfileForm, ImageForm, VideoForm
+from main.forms import NewUserForm, ProfileForm, ImageForm, VideoForm, AlbumForm
 from main.models import Photo, Profile, Video, Album
 
 
@@ -25,9 +25,24 @@ class RegisterView(FormView):
         return super().form_valid(form)
 
 
+# class ProfileView(TemplateView):
+#     model = Profile
+#     template_name = 'profile.html'
+#
+#     def get_context_data(self, **kwargs):
+#         context = super().get_context_data(**kwargs)
+#         username = self.kwargs.get("username")
+#         uid = get_object_or_404(User, username=username)
+#         page_user = get_object_or_404(Profile, id=uid.id)
+#         context['page_user'] = page_user
+#         context['photos'] = Photo.objects.all().filter(created_by=uid).order_by("-created_at")
+#         context['videos'] = Video.objects.all().filter(created_by=uid).order_by("-created_at")
+#         return context
+
+
 class ProfileView(TemplateView):
     model = Profile
-    template_name = 'profile.html'
+    template_name = 'profile_new.html'
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -35,8 +50,9 @@ class ProfileView(TemplateView):
         uid = get_object_or_404(User, username=username)
         page_user = get_object_or_404(Profile, id=uid.id)
         context['page_user'] = page_user
-        context['photos'] = Photo.objects.all().filter(created_by=uid).order_by("-created_at")
-        context['videos'] = Video.objects.all().filter(created_by=uid).order_by("-created_at")
+        context['albums'] = Album.objects.all().filter(created_by=uid).order_by("-created_at")
+        # context['photos'] = Photo.objects.all().filter(created_by=uid).order_by("-created_at")
+        # context['videos'] = Video.objects.all().filter(created_by=uid).order_by("-created_at")
         return context
 
 
@@ -48,13 +64,27 @@ class AlbumView(TemplateView):
         context = super().get_context_data(**kwargs)
         username = self.kwargs.get("username")
         album_title = self.kwargs.get("album")
-        print(album_title)
         uid = get_object_or_404(User, username=username)
         album = get_object_or_404(Album, title=album_title)
         page_user = get_object_or_404(Profile, id=uid.id)
         context['page_user'] = page_user
         context['photos'] = Photo.objects.all().filter(created_by=uid, album=album).order_by("-created_at")
         context['videos'] = Video.objects.all().filter(created_by=uid, album=album).order_by("-created_at")
+        return context
+
+
+class AlbumViewAll(TemplateView):
+
+    template_name = 'profile_album.html'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        username = self.kwargs.get("username")
+        uid = get_object_or_404(User, username=username)
+        page_user = get_object_or_404(Profile, id=uid.id)
+        context['page_user'] = page_user
+        context['photos'] = Photo.objects.all().filter(created_by=uid, album=None).order_by("-created_at")
+        context['videos'] = Video.objects.all().filter(created_by=uid, album=None).order_by("-created_at")
         return context
 
 
@@ -69,17 +99,6 @@ class CreateProfilePageView(CreateView):
         return super().form_valid(form)
 
     success_url = reverse_lazy('homepage')
-
-
-def upload_photo(request):
-    if request.method == 'POST':
-        form = ImageForm(request.POST, request.FILES)
-        if form.is_valid():
-            form.save()
-        return redirect('homepage')
-
-    form = ImageForm()
-    return render(request, 'upload_photo.html', {'form': form})
 
 
 class UploadPhoto(CreateView):
@@ -110,3 +129,28 @@ class UploadVideo(CreateView):
         return super().form_valid(form)
 
     success_url = reverse_lazy('homepage')
+
+
+class CreateAlbum(CreateView):
+    model = Album
+    template_name = 'create_album.html'
+    form_class = AlbumForm
+
+    def form_valid(self, form):
+        video = form.save(commit=False)
+        video.created_by = self.request.user
+        video.save()
+        return super().form_valid(form)
+
+    success_url = reverse_lazy('homepage')
+
+
+# def upload_photo(request):
+#     if request.method == 'POST':
+#         form = ImageForm(request.POST, request.FILES)
+#         if form.is_valid():
+#             form.save()
+#         return redirect('homepage')
+#
+#     form = ImageForm()
+#     return render(request, 'upload_photo.html', {'form': form})
