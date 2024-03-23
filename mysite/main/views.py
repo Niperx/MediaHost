@@ -1,5 +1,13 @@
-from django.shortcuts import get_object_or_404, render, redirect
+import io
+import os
+import zipfile
+import requests
+
+from django.shortcuts import get_object_or_404, render, redirect, HttpResponse
 from django.urls import reverse_lazy
+
+from wsgiref.util import FileWrapper
+import mimetypes
 
 from django.views.generic import TemplateView, FormView, UpdateView, View
 from django.views.generic.detail import DetailView
@@ -105,6 +113,20 @@ class LargePhoto(TemplateView):
         return context
 
 
+class LargeVideo(TemplateView):
+
+    template_name = 'video.html'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        pk = self.kwargs.get("pk")
+        print(pk)
+        img = get_object_or_404(Video, pk=pk)
+        # print(img.url)
+        context['video'] = img
+        return context
+
+
 class CreateProfilePageView(CreateView):
     model = Profile
 
@@ -118,20 +140,20 @@ class CreateProfilePageView(CreateView):
     success_url = reverse_lazy('homepage')
 
 
-class UploadPhoto(CreateView):
-    model = Photo
-    template_name = 'upload_photo.html'
-    form_class = ImageForm()
-
-    def form_valid(self, form):
-        photo = form.save(commit=False)
-        photo.created_by = self.request.user
-        photo.save()
-        return super().form_valid(form)
-
-        # return redirect(f'profile/{self.request.user.username}')
-
-    success_url = reverse_lazy('homepage')
+# class UploadPhoto(CreateView):
+#     model = Photo
+#     template_name = 'upload_photo.html'
+#     form_class = ImageForm()
+#
+#     def form_valid(self, form):
+#         photo = form.save(commit=False)
+#         photo.created_by = self.request.user
+#         photo.save()
+#         return super().form_valid(form)
+#
+#         # return redirect(f'profile/{self.request.user.username}')
+#
+#     success_url = reverse_lazy('homepage')
 
 
 def upload_photo(request):
@@ -198,8 +220,50 @@ def delete_photo(request, pk):
     return redirect('homepage')
 
 
+def delete_video(request, pk):
+
+    if not request.user.is_authenticated:
+        return redirect('homepage')
+
+    ph = Video.objects.get(pk=pk)
+    ph.delete()
+
+    return redirect('homepage')
 
 
+def download_album(request, pk):
+
+    from mysite import settings
+
+
+    if not request.user.is_authenticated:
+        return redirect('homepage')
+
+    album = Album.objects.get(pk=pk)
+    image = Photo.objects.all().filter(album=album)
+    print(image)
+    print(settings.MEDIA_ROOT)
+
+    # wrapper = FileWrapper(open(settings.MEDIA_ROOT + image.image.url[7:], 'rb'))
+
+    images = []
+    for img in image:
+        url = settings.MEDIA_ROOT + img.image.url[7:]
+        url = url.replace(u'\ufeff', '')
+        images.append(url)
+
+    print(images)
+    buffer = io.BytesIO()
+
+    with zipfile.ZipFile(buffer, 'w') as img_zip:
+        for image_url in images:
+            img_zip.write(image_url)
+
+    response = HttpResponse(buffer.getvalue())
+    response['Content-Type'] = 'application/x-zip-compressed'
+    response['Content-Disposition'] = 'attachment; filename=file.zip'
+
+    return response
 
 
 
