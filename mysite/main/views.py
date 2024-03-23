@@ -170,18 +170,32 @@ def upload_photo(request):
     return render(request, 'upload_photo.html', {'form': form})
 
 
-class UploadVideo(CreateView):
-    model = Video
-    template_name = 'upload_video.html'
-    form_class = VideoForm
+# class UploadVideo(CreateView):
+#     model = Video
+#     template_name = 'upload_video.html'
+#     form_class = VideoForm
+#
+#     def form_valid(self, form):
+#         video = form.save(commit=False)
+#         video.created_by = self.request.user
+#         video.save()
+#         return super().form_valid(form)
+#
+#     success_url = reverse_lazy('homepage')
 
-    def form_valid(self, form):
-        video = form.save(commit=False)
-        video.created_by = self.request.user
-        video.save()
-        return super().form_valid(form)
 
-    success_url = reverse_lazy('homepage')
+def upload_video(request):
+
+    if request.method == 'POST':
+        form = VideoForm(request.POST, request.FILES, user=request.user)
+        if form.is_valid():
+            video = form.save(commit=False)
+            video.created_by = request.user
+            video.save()
+        return redirect('homepage')
+
+    form = VideoForm(user=request.user)
+    return render(request, 'upload_video.html', {'form': form})
 
 
 class CreateAlbum(CreateView):

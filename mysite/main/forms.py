@@ -45,7 +45,14 @@ class ImageForm(ModelForm):
 class VideoForm(ModelForm):
     class Meta:
         model = Video
-        fields = ('caption', 'video')
+        fields = ('caption', 'video', 'album')
+
+    def __init__(self, *args, **kwargs):
+        user = kwargs.pop('user', None)
+        super().__init__(*args, **kwargs)
+        if user:
+            self.fields['album'].queryset = Album.objects.filter(created_by=user)
+            self.fields['album'].required = False
 
 
 class AlbumForm(ModelForm):

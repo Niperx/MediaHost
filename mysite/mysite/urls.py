@@ -22,7 +22,7 @@ from django.conf import settings
 from django.contrib.auth.views import LoginView, LogoutView
 
 from main.views import HomeView, RegisterView, ProfileView, CreateProfilePageView, \
-    UploadVideo, AlbumView, CreateAlbum, AlbumViewAll, delete_album, LargePhoto, delete_photo, upload_photo, \
+    upload_video, AlbumView, CreateAlbum, AlbumViewAll, delete_album, LargePhoto, delete_photo, upload_photo, \
     LargeVideo, delete_video, download_album
 
 # (?P<pk>\d+)
@@ -46,7 +46,7 @@ urlpatterns = [
     path('create_profile_page/', CreateProfilePageView.as_view(), name='create_profile_page'),
 
     path('upload_photo/', upload_photo, name='upload_photo'),
-    path('upload_video/', UploadVideo.as_view(), name='upload_video'),
+    path('upload_video/', upload_video, name='upload_video'),
     path('create_album/', CreateAlbum.as_view(), name='create_album'),
     path('register', RegisterView.as_view(success_url='/'), name='register'),
     path('login/', LoginView.as_view(template_name='login.html'), name='login'),
