@@ -22,19 +22,25 @@ from django.conf import settings
 from django.contrib.auth.views import LoginView, LogoutView
 
 from main.views import HomeView, RegisterView, ProfileView, CreateProfilePageView, \
-    UploadPhoto, UploadVideo, AlbumView, CreateAlbum, AlbumViewAll
+    UploadPhoto, UploadVideo, AlbumView, CreateAlbum, AlbumViewAll, delete_album, LargePhoto, delete_photo, upload_photo
+
+# (?P<pk>\d+)
 
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('', HomeView.as_view(), name='homepage'),
+    path('image/<int:pk>', LargePhoto.as_view(), name='image'),
 
-    path('profile/<username>', ProfileView.as_view(), name='profile'),
+    path('profile/<str:username>', ProfileView.as_view(), name='profile'),
     path('profile/<username>/All', AlbumViewAll.as_view(), name='profile_album_all'),
     path('profile/<username>/<album>', AlbumView.as_view(), name='profile_album'),
+    path('profile/<username>/<album>', AlbumView.as_view(), name='profile_album'),
 
+    path('delete_album/<int:pk>', delete_album, name='delete_album'),
+    path('delete_photo/<int:pk>', delete_photo, name='delete_photo'),
     path('create_profile_page/', CreateProfilePageView.as_view(), name='create_profile_page'),
 
-    path('upload_photo/', UploadPhoto.as_view(), name='upload_photo'),
+    path('upload_photo/', upload_photo, name='upload_photo'),
     path('upload_video/', UploadVideo.as_view(), name='upload_video'),
     path('create_album/', CreateAlbum.as_view(), name='create_album'),
     path('register', RegisterView.as_view(success_url='/'), name='register'),

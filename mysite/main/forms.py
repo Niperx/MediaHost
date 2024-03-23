@@ -2,7 +2,7 @@ from django import forms
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.models import User
 
-from django.forms import ModelForm
+from django.forms import ModelForm, ModelChoiceField
 
 from .models import Profile, Photo, Video, Album
 
@@ -32,7 +32,14 @@ class ProfileForm(ModelForm):
 class ImageForm(ModelForm):
     class Meta:
         model = Photo
-        fields = ('title', 'image')
+        fields = ('title', 'image', 'album')
+
+    def __init__(self, *args, **kwargs):
+        user = kwargs.pop('user', None)
+        super().__init__(*args, **kwargs)
+        if user:
+            self.fields['album'].queryset = Album.objects.filter(created_by=user)
+            self.fields['album'].required = False
 
 
 class VideoForm(ModelForm):
@@ -44,4 +51,5 @@ class VideoForm(ModelForm):
 class AlbumForm(ModelForm):
     class Meta:
         model = Album
-        fields = ('title', )
+        fields = ('title', 'is_private')
+

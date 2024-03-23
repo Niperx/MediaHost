@@ -11,7 +11,7 @@
             </form>
         </div>
     {% else %}
-        <a href="{% url 'login' user.username %}">Login</a>
+        <a class='btn btn-outline-secondary btn-lg p-1' href="{% url 'login' %}">Login</a>
     {% endif %}
     </div>
 {% endblock %}

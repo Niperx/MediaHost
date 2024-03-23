@@ -42,11 +42,19 @@
             </a>
         </div>
     {% for n in albums %}
+        {% if n.is_private and request.user.id != page_user.id %}
+        {% else %}
         <div class="col-md-4 my-3">
 
             <div class="container px-5">
                 <h3>{{ n.title }}</h3>
-                <h5 class="text-secondary">{{ n.created_at }}</h5>
+                <h5 class="text-secondary">
+                    {% if n.is_private %}
+                        Private
+                    {% else %}
+                        Public
+                    {% endif %}
+                </h5>
             </div>
 
             <a href="../../profile/{{ page_user }}/{{ n.title }}">
@@ -54,6 +62,7 @@
             </a>
 
         </div>
+        {% endif %}
     {% endfor %}
     </div>
 </div>

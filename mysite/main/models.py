@@ -8,6 +8,7 @@ class Album(models.Model):
     title = models.CharField(max_length=30)
     created_by = models.ForeignKey(get_user_model(), on_delete=models.CASCADE)
     created_at = models.DateTimeField(default=now, blank=True)
+    is_private = models.BooleanField(default=False)
 
     class Meta:
         verbose_name = 'Album'
