@@ -21,11 +21,18 @@
     </div>
     {% if request.user.id == page_user.id and album.title %}
     <div class="col-3 mt-2 text-end">
-        <a class="btn btn-danger" href="{% url 'delete_album' pk=album.pk %}">Delete</a>
+        <div class="row-5">
+            <a class="btn btn-danger" href="{% url 'delete_album' pk=album.pk %}">Delete</a>
+        </div>
+        <br>
+        <br>
+        <br>
+        <br>
 
-    </div>
-    <div class="col-3 mt-2 text-end">
-        <a class="btn btn-secondary" href="{% url 'download_album' pk=album.pk %}">Download</a>
+        <div class="row-5">
+            <a class="btn btn-secondary" href="{% url 'download_album' pk=album.pk %}">Download</a>
+        </div>
+
 
     </div>
     {% endif %}
